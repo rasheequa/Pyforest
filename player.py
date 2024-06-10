@@ -4,7 +4,12 @@ class Player(animation.AnimateSprite):
     
     def __init__(self,x,y):
         super().__init__("walk and idle","cat kigurumi walk and idle",x,y)
-
+        self.old_position = self.position.copy()
+        self.feet=pygame.Rect(0,0,self.rect.width*0.5,12)
+        
+    def save_location(self): 
+        self.old_position=self.position.copy()
+        
     def move_right(self):
         self.position[0] += self.speed
         self.direction = 'right'
@@ -34,5 +39,11 @@ class Player(animation.AnimateSprite):
 
     def update(self):
         self.rect.topleft = self.position
+        self.feet.midbottom = self.rect.midbottom
         self.check_movement()
         self.animate()
+        
+    def move_back(self):
+        self.position = self.old_position.copy()
+        self.rect.topleft = self.position
+        self.feet.midbottom = self.rect.midbottom

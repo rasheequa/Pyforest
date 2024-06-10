@@ -14,13 +14,20 @@ class Game:
         map_data=pyscroll.data.TiledMapData(tmx_data)
         map_layer=pyscroll.orthographic.BufferedRenderer(map_data,self.screen.get_size())
 
-        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=5)
         map_layer.zoom=3
         player_position=tmx_data.get_object_by_name("player")
         self.player=Player(player_position.x,player_position.y)
+        
+        
+        self.walls=[]
+        for obj in tmx_data.objects:
+            if obj.type == "collision":
+                self.walls.append(pygame.Rect(obj.x,obj.y, obj.width,obj.height))
+                
+        
+        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=9)
         self.group.add(self.player)
         
-
     def handle_input(self):
         pressed = pygame.key.get_pressed()
         
@@ -37,14 +44,18 @@ class Game:
         
     def update(self):
         self.group.update() 
-        self.handle_input()
         self.group.center(self.player.rect)
+        for sprite in self.group.sprites():
+            if sprite.feet.collidelist(self.walls)>-1:
+                sprite.move_back()
           
        
     def run(self):
         clock=pygame.time.Clock()
         running = True
         while running:
+            self.player.save_location()
+            self.handle_input()
             self.update()
             self.group.draw(self.screen)
             pygame.display.flip()
