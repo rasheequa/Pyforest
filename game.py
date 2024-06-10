@@ -32,16 +32,20 @@ class Game:
             self.player.move_left()
         elif pressed[pygame.K_RIGHT]:
             self.player.move_right()
+        else:
+            self.player.stop_moving()
         
-    
+    def update(self):
+        self.group.update() 
+        self.handle_input()
+        self.group.center(self.player.rect)
+          
        
     def run(self):
         clock=pygame.time.Clock()
         running = True
         while running:
-            self.handle_input()
-            self.group.update()
-            self.group.center(self.player.rect)
+            self.update()
             self.group.draw(self.screen)
             pygame.display.flip()
             for event in pygame.event.get():
