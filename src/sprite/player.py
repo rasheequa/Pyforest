@@ -1,5 +1,7 @@
 import pygame
-import animation
+
+import src.graphique.animation as animation
+
 class Player(animation.AnimateSprite):
     
     def __init__(self,x,y):

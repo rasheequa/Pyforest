@@ -2,7 +2,7 @@ import pygame
 import pytmx
 import pyscroll
 import pytmx.util_pygame
-from player import Player
+from src.sprite.player import Player
 
 class Game:
     
@@ -10,7 +10,7 @@ class Game:
         self.screen=pygame.display.set_mode((800,800))
         pygame.display.set_caption("Pyforest")
         
-        tmx_data = pytmx.util_pygame.load_pygame('pyforest.tmx')
+        tmx_data = pytmx.util_pygame.load_pygame("src/modele/pyforest.tmx")
         map_data=pyscroll.data.TiledMapData(tmx_data)
         map_layer=pyscroll.orthographic.BufferedRenderer(map_data,self.screen.get_size())
 
@@ -25,7 +25,7 @@ class Game:
                 self.walls.append(pygame.Rect(obj.x,obj.y, obj.width,obj.height))
                 
         
-        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=9)
+        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=6)
         self.group.add(self.player)
         
     def handle_input(self):

@@ -4,8 +4,8 @@ class AnimateSprite(pygame.sprite.Sprite):
     
     def __init__(self,  sprite_name1, sprite_name2, x, y):
         super().__init__()
-        self.sprite_sheet1 = pygame.image.load(f'Tiny Wonder Forest 1.0/characters/main character/{sprite_name1}.png')
-        self.sprite_sheet2 = pygame.image.load(f'Tiny Wonder Forest 1.0/characters/main character/{sprite_name2}.png')
+        self.sprite_sheet1 = pygame.image.load(f'src/modele/characters/main character/{sprite_name1}.png')
+        self.sprite_sheet2 = pygame.image.load(f'src/modele/characters/main character/{sprite_name2}.png')
         self.direction = 'right'
         self.is_moving = False
         
