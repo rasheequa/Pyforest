@@ -2,10 +2,10 @@ import pygame
 
 import src.graphique.animation as animation
 
-class Player(animation.AnimateSprite):
+class Mob(animation.AnimateSprite):
     
     def __init__(self,x,y):
-        super().__init__("walk and idle","cat kigurumi walk and idle",x,y)
+        super().__init__("blue mushroom sheet",None,x,y)
         self.old_position = self.position.copy()
         self.feet=pygame.Rect(0,0,self.rect.width*0.5,12)
         
@@ -35,15 +35,16 @@ class Player(animation.AnimateSprite):
        
     def get_image(self, row, frame):
         image = pygame.Surface([24, 24],pygame.SRCALPHA)
-        image.blit(self.sprite_sheet1, (0, 0), (frame * 24, row * 24, 24, 24))
-        image.blit(self.sprite_sheet2, (0, 0), (frame * 24, row * 24, 24, 24))
+        image.blit(self.sprite_sheet1, (0, 0), (frame * 16, row * 16, 16, 16))
+        if hasattr(self,'sprite_sheet2'):
+            image.blit(self.sprite_sheet2, (0, 0), (frame * 24, row * 24, 24, 24))
         return image
 
     def update(self):
         self.rect.topleft = self.position
         self.feet.midbottom = self.rect.midbottom
         self.check_movement()
-        self.animate_player()
+        self.animate_mob()
         
     def move_back(self):
         self.position = self.old_position.copy()

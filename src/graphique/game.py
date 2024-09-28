@@ -2,6 +2,7 @@ import pygame
 import pytmx
 import pyscroll
 import pytmx.util_pygame
+from src.sprite.mob import Mob
 from src.sprite.player import Player
 
 class Game:
@@ -16,6 +17,8 @@ class Game:
 
         map_layer.zoom=3
         player_position=tmx_data.get_object_by_name("player")
+        mob_position=tmx_data.get_object_by_name("mob")
+        self.mob=Mob(mob_position.x,mob_position.y)
         self.player=Player(player_position.x,player_position.y)
         
         
@@ -27,19 +30,21 @@ class Game:
         
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=6)
         self.group.add(self.player)
+        self.group.add(self.mob)
         
     def handle_input(self):
         pressed = pygame.key.get_pressed()
         
         if pressed[pygame.K_UP]:
             self.player.move_up()
-        elif pressed[pygame.K_DOWN]:
+        if pressed[pygame.K_DOWN]:
             self.player.move_down()
-        elif pressed[pygame.K_LEFT]:
+        if pressed[pygame.K_LEFT]:
             self.player.move_left()
-        elif pressed[pygame.K_RIGHT]:
+        if pressed[pygame.K_RIGHT]:
             self.player.move_right()
-        else:
+
+        if not (pressed[pygame.K_UP] or pressed[pygame.K_DOWN] or pressed[pygame.K_LEFT] or pressed[pygame.K_RIGHT]):
             self.player.stop_moving()
         
     def update(self):
@@ -55,6 +60,7 @@ class Game:
         running = True
         while running:
             self.player.save_location()
+            self.mob.save_location()
             self.handle_input()
             self.update()
             self.group.draw(self.screen)
