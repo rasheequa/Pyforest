@@ -1,3 +1,4 @@
+import time
 import pygame
 
 class AnimateSprite(pygame.sprite.Sprite):
@@ -14,8 +15,8 @@ class AnimateSprite(pygame.sprite.Sprite):
         self.image = self.get_image(0, 0)
         self.rect = self.image.get_rect()
         self.position = [x, y]
-        self.speed = 2
-
+        self.speed_player = 0.9
+        self.speed_mob = 0.5
         self.current_frame = 0
         
         self.frames_left_player = self.load_left_animation_images_player()
@@ -30,9 +31,12 @@ class AnimateSprite(pygame.sprite.Sprite):
         
         self.animation_timer = 0
         self.animation_speed_player = 110
-        self.animation_speed_mob = 110
+        self.animation_speed_mob = 100
         self.afk_animation_speed_player = 300
         self.afk_animation_speed_mob = 250
+
+        self.afk_timer = 0
+        self.afk_delay = 2000
 
         
     def load_right_animation_images_player(self):
@@ -102,6 +106,8 @@ class AnimateSprite(pygame.sprite.Sprite):
 
     def animate_mob(self):
         now = pygame.time.get_ticks()
+        
+       
         if self.is_moving:
             if now - self.animation_timer > self.animation_speed_mob:
                 self.animation_timer = now
@@ -115,17 +121,21 @@ class AnimateSprite(pygame.sprite.Sprite):
                     self.current_frame = 0
                     
         else:
+           
             if now - self.animation_timer > self.afk_animation_speed_mob:
                 self.animation_timer = now
                 if self.direction == 'left':
                     self.image = self.frames_afk_left_mob[self.current_frame % len(self.frames_afk_left_mob)]
                 else:
                     self.image = self.frames_afk_right_mob[self.current_frame % len(self.frames_afk_right_mob)]
-                self.current_frame = (self.current_frame + 1) % len(self.frames_afk_left_mob)  
-                
+                self.current_frame = (self.current_frame + 1) % len(self.frames_afk_left_mob)
+
     def check_movement(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or keys[pygame.K_UP] or keys[pygame.K_DOWN]:
             self.is_moving = True
+            self.afk_timer = pygame.time.get_ticks()  
         else:
-            self.is_moving = False
+            
+            if pygame.time.get_ticks() - self.afk_timer > self.afk_delay:
+                self.is_moving = False
