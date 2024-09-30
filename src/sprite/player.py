@@ -7,29 +7,27 @@ vector=pygame.math.Vector2
 class Player(animation.AnimateSprite):
     
     def __init__(self,x,y,walls):
-        super().__init__("walk and idle","cat kigurumi walk and idle",x,y)
-        self.old_position = self.position.copy()
+        super().__init__("walk and idle","cat kigurumi walk and idle",self,x,y)
         self.feet=pygame.Rect(0,0,self.rect.width*0.5,12)
         self.walls=walls
-        self.position=vector(x,y)
-        self.velocity=vector(0,0)
-        self.acceleration=vector(0,0)
 
         self.HORIZONTAL_ACCELERATION=0.4
         self.HORIZONTAL_FRICTION=0.2
-        
 
-    def save_location(self): 
-        self.old_position=self.position.copy()
+        self.speed_player = 0.9
+        self.is_moving = False
+        self.position=vector(x,y)
+        self.velocity=vector(0,0)
+        self.acceleration=vector(0,0)
         
     def move_right(self):
         self.acceleration.x = self.HORIZONTAL_ACCELERATION
-        self.direction = 'right'
+        self.direction_player = 'right'
         self.is_moving = True
 
     def move_left(self):
         self.acceleration.x = -self.HORIZONTAL_ACCELERATION  
-        self.direction = 'left'
+        self.direction_player = 'left'
         self.is_moving = True
 
     def move_up(self):
@@ -50,7 +48,6 @@ class Player(animation.AnimateSprite):
         return image
 
     def update(self):
-        self.save_location() 
 
         self.velocity += self.acceleration
         self.velocity.x *= (1 - self.HORIZONTAL_FRICTION)
@@ -77,14 +74,10 @@ class Player(animation.AnimateSprite):
         self.acceleration = vector(0, 0)
         self.rect.topleft = self.position
         self.feet.midbottom = self.rect.midbottom
-        self.check_movement()
+        self.check_movement_player()
         self.animate_player()
         
     def check_collision(self, axis):
-        """
-        Checks for collisions with the list of obstacles.
-        Adjusts the player's position if a collision is detected.
-        """
         for obstacle in self.walls:
             if self.rect.colliderect(obstacle):
                 if axis == 'x':

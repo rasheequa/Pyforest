@@ -21,11 +21,12 @@ class Game:
 
         player_position=tmx_data.get_object_by_name("mob")
         
-        
+    
         self.walls=[]
         for obj in tmx_data.objects:
             if obj.type == "collision":
                 self.walls.append(pygame.Rect(obj.x,obj.y, obj.width,obj.height))
+
 
         player_position=tmx_data.get_object_by_name("player")
         self.player=Player(player_position.x,player_position.y,self.walls)
@@ -54,7 +55,6 @@ class Game:
         
         
     def update(self):
-
         self.group.update() 
         self.group.center(self.player.rect)
         self.ia.update()
@@ -64,8 +64,6 @@ class Game:
         clock=pygame.time.Clock()
         running = True
         while running:
-            self.player.save_location()
-            self.mob.save_location()
             self.handle_input()
             self.update()
             self.group.draw(self.screen)
