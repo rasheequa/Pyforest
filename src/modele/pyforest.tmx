@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="220">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="245">
  <tileset firstgid="1" source="nature.tsx"/>
  <tileset firstgid="151" source="pont.tsx"/>
  <tileset firstgid="343" source="items.tsx"/>
@@ -591,6 +591,69 @@
   </object>
   <object id="217" type="collision" x="541.75" y="568.25" width="8" height="52.75"/>
   <object id="218" type="collision" x="468" y="568.875" width="77.25" height="6"/>
+  <object id="221" name="mob" x="468" y="132">
+   <point/>
+  </object>
+  <object id="222" name="mob" x="511.333" y="183.333">
+   <point/>
+  </object>
+  <object id="223" name="mob" x="426.667" y="48">
+   <point/>
+  </object>
+  <object id="227" name="mob" x="68" y="439.333">
+   <point/>
+  </object>
+  <object id="228" name="mob" x="85.3333" y="486">
+   <point/>
+  </object>
+  <object id="229" name="mob" x="154" y="458">
+   <point/>
+  </object>
+  <object id="230" name="mob" x="138.667" y="552">
+   <point/>
+  </object>
+  <object id="231" name="mob" x="229.333" y="515.333">
+   <point/>
+  </object>
+  <object id="232" name="mob" x="493.333" y="550.667">
+   <point/>
+  </object>
+  <object id="233" name="mob" x="630.667" y="520.667">
+   <point/>
+  </object>
+  <object id="234" name="mob" x="618" y="352.667">
+   <point/>
+  </object>
+  <object id="235" name="mob" x="752" y="340.667">
+   <point/>
+  </object>
+  <object id="236" name="mob" x="720" y="457.333">
+   <point/>
+  </object>
+  <object id="237" name="mob" x="658" y="710.667">
+   <point/>
+  </object>
+  <object id="238" name="mob" x="404" y="710.667">
+   <point/>
+  </object>
+  <object id="239" name="mob" x="244.667" y="758">
+   <point/>
+  </object>
+  <object id="240" name="mob" x="92" y="754">
+   <point/>
+  </object>
+  <object id="241" name="mob" x="104" y="41.3333">
+   <point/>
+  </object>
+  <object id="242" name="mob" x="555.333" y="380.667">
+   <point/>
+  </object>
+  <object id="243" name="mob" x="524" y="740">
+   <point/>
+  </object>
+  <object id="244" name="mob" x="242.667" y="89.3333">
+   <point/>
+  </object>
  </objectgroup>
  <layer id="15" name="maison" width="50" height="50">
   <data encoding="csv">

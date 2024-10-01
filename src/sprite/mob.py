@@ -15,9 +15,15 @@ class Mob(animation.AnimateSprite):
 
         self.speed_mob = 2
         self.is_moving = False
+
         self.position = vector(x, y)
         self.velocity = vector(0, 0)
         self.acceleration = vector(0, 0)
+
+        self.spawn=self.position.copy()
+
+    def set_acceleration(self,x,y):
+        self.acceleration = vector(x, y)*self.HORIZONTAL_ACCELERATION
 
     def move_right(self):
         self.acceleration.x = self.HORIZONTAL_ACCELERATION

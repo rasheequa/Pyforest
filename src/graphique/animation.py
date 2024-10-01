@@ -24,7 +24,7 @@ class AnimateSprite(pygame.sprite.Sprite):
         self.animation_speed_mob = 100
         self.animation_speed_player = 110
         
-        self.afk_animation_speed_mob = 300
+        self.afk_animation_speed_mob = 200
         self.afk_animation_speed_player = 300
         
         self.direction_player = 'right'
@@ -88,7 +88,7 @@ class AnimateSprite(pygame.sprite.Sprite):
         images = []
         for frame in range(6):
             if self.direction_mob == 'left':
-                images.append(self.get_image(5, frame))
+                images.append(self.get_image(4, frame))
             elif self.direction_mob == 'right':
                 images.append(self.get_image(0, frame))
         return images
