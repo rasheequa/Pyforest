@@ -14,10 +14,7 @@ class IA:
 
         self.last_move_time = pygame.time.get_ticks()
 
-        self.min_distance = 5
-        self.max_speed = 3  
-        self.min_speed = 1
-        
+        self.min_distance = 5  
         self.is_idling=True
         self.steps = 0
         self.step_count = 0
@@ -44,12 +41,21 @@ class IA:
         distance_from_player = self.get_distance_to_player()
         return distance_from_player <= self.radius
 
+    def check_collision_with_player(self):
+        dx = self.mob.position.x - self.player.position.x
+        dy = self.mob.position.y - self.player.position.y
+        distance = math.sqrt(dx ** 2 + dy ** 2)
     
+    
+        collision_radius = 20
+        return distance <= collision_radius
+
     def update(self):
-        
+    
         if self.is_within_player() :
             self.is_idling = False
             self.pathfind_to_player()
+            self.mob.is_moving = True
 
         elif self.is_within_spawn(self.mob.position.x,self.mob.position.y):
             self.is_idling = True
@@ -58,6 +64,7 @@ class IA:
                 self.random_direction = random.choice(['right', 'left', 'up', 'down'])
             
             if self.step_count < self.steps:
+                self.mob.is_moving = True
                 if self.random_direction == 'right':
                     self.mob.set_acceleration(1, 0)
                     self.mob.move_right()
@@ -76,6 +83,7 @@ class IA:
             else:
                 self.step_count = 0
                 self.mob.stop_moving()
+                self.mob.is_moving = False
         
         else:
             self.return_to_spawn()
@@ -89,18 +97,22 @@ class IA:
 
         distance_to_player = math.sqrt(dx ** 2 + dy ** 2)
 
+        if distance_to_player <= self.min_distance:
+            self.mob.stop_moving()
+            return
+        
         if self.min_distance < distance_to_player < self.radius:
             direction_x = dx / distance_to_player if distance_to_player != 0 else 0
             direction_y = dy / distance_to_player if distance_to_player != 0 else 0
             
-            new_position_x = self.mob.position.x + direction_x * self.max_speed
-            new_position_y = self.mob.position.y + direction_y * self.max_speed
+            new_position_x = self.mob.position.x + direction_x * self.mob.speed_mob
+            new_position_y = self.mob.position.y + direction_y * self.mob.speed_mob
 
             
             if self.is_within_spawn(new_position_x, new_position_y):
-                self.mob.set_acceleration(direction_x* self.max_speed, direction_y* self.max_speed) 
-                
+                self.mob.set_acceleration(direction_x* self.mob.speed_mob, direction_y* self.mob.speed_mob) 
                 self.move_towards(direction_x, direction_y)
+
             else:
                 self.return_to_spawn()
         else:
@@ -127,10 +139,14 @@ class IA:
         dy = self.mob.spawn.y - self.mob.position.y
         distance_to_spawn = math.sqrt(dx ** 2 + dy ** 2)
 
+        if distance_to_spawn <= self.min_distance:
+            self.mob.stop_moving()
+            return
+        
         if distance_to_spawn > self.min_distance:
             direction_x = dx / distance_to_spawn if distance_to_spawn != 0 else 0
             direction_y = dy / distance_to_spawn if distance_to_spawn != 0 else 0
-            self.mob.set_acceleration(direction_x* self.max_speed, direction_y* self.max_speed)
+            self.mob.set_acceleration(direction_x* self.mob.speed_mob, direction_y* self.mob.speed_mob)
             self.move_towards(direction_x, direction_y)
         
         else:
