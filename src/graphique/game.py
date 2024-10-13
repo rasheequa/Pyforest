@@ -38,7 +38,7 @@ class Game:
                 mob = Mob(obj.x, obj.y, self.walls)
                 self.mobs.append(mob)
                 self.group.add(mob)
-                self.ia.append(IA(mob,self.player))
+                self.ia.append(IA(mob,self.player,tmx_data))
         
 
     def handle_input(self):
