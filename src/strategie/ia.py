@@ -30,6 +30,10 @@ class IA:
         self.spawn_pos = self.mob.position.copy()
 
         self.astar = AStar(self.tiled_map)
+        self.current_path = None
+        self.last_player_grid = None
+        self.last_recalc_time = 0
+        self.recalc_cooldown = 250  # ms between forced path recalculations
 
     def update(self):
         mob_pos = (int(self.mob.position.x // self.pixel), int(self.mob.position.y // self.pixel))
@@ -52,22 +56,35 @@ class IA:
 
         # Don't recalculate path if too close to player (within 1.5 tiles)
         min_recalc_distance = self.pixel * 1.5
-        
+
+        now = pygame.time.get_ticks()
+
         # Pursuit: mobs follow the player if in radius, but don't recalculate when too close
         if distance_to_player <= self.radius:
-            # Only recalculate path if not too close to player
-            if distance_to_player > min_recalc_distance:
-                goal_node = Node(player_pos)
-                start_node = Node(mob_pos)
-                path = self.astar.search(start_node, goal_node)
-                if path:
-                    # Mob poursuit le joueur à vitesse modérée
-                    self.mob.speed_mob = 1.4
-                    self.move_along_path(path)
-            else:
-                # When very close, just stop
+            # When very close, just stop
+            if distance_to_player <= min_recalc_distance:
                 self.mob.velocity = vector(0, 0)
                 self.mob.speed_mob = 1.1
+            else:
+                # Only recalculate path when player moved to a different grid or cooldown expired
+                need_recalc = False
+                if self.last_player_grid != player_pos:
+                    need_recalc = True
+                if now - self.last_recalc_time > self.recalc_cooldown:
+                    need_recalc = True
+
+                if need_recalc:
+                    goal_node = Node(player_pos)
+                    start_node = Node(mob_pos)
+                    path = self.astar.search(start_node, goal_node)
+                    self.last_recalc_time = now
+                    self.last_player_grid = player_pos
+                    self.current_path = path
+
+                if self.current_path:
+                    # Mob poursuit le joueur à vitesse modérée
+                    self.mob.speed_mob = 1.4
+                    self.move_along_path(self.current_path)
         elif distance_to_player > self.radius:
             # Retour à la position de spawn à vitesse réduite
             self.mob.speed_mob = 1.1

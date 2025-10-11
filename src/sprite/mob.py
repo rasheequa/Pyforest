@@ -19,6 +19,7 @@ class Mob(animation.AnimateSprite):
         self.position = vector(x, y)
         self.velocity = vector(0, 0)
         self.acceleration = vector(0, 0)
+        self.last_direction = vector(-1, 0)  # Direction initiale vers la gauche
 
         self.spawn=self.position.copy()
 
@@ -54,14 +55,19 @@ class Mob(animation.AnimateSprite):
         old_position = self.position.copy()
         future_position = self.position + self.velocity
 
-        # Set movement state based on if there's any velocity at all
-        self.is_moving = abs(self.velocity.x) > 0.01 or abs(self.velocity.y) > 0.01
+        # Seuil de vitesse minimum plus élevé pour éviter les micro-mouvements
+        min_velocity = 0.05
+        self.is_moving = self.velocity.length() > min_velocity
         
-        # Update direction based on movement
-        if self.velocity.x > 0:
-            self.direction_mob = 'right'
-        elif self.velocity.x < 0:
-            self.direction_mob = 'left'
+        # Mettre à jour le vecteur de dernière direction si on bouge
+        if self.is_moving:
+            self.last_direction = self.velocity.normalize()
+        
+        # Update direction based on last movement vector
+        if hasattr(self, 'last_direction'):
+            # Si on se déplace plus vers la droite/gauche que haut/bas
+            if abs(self.last_direction.x) > abs(self.last_direction.y):
+                self.direction_mob = 'right' if self.last_direction.x > 0 else 'left'
 
         self.position.x = future_position.x
         self.rect.topleft = self.position
