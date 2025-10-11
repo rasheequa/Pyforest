@@ -19,12 +19,12 @@ class AnimateSprite(pygame.sprite.Sprite):
         self.current_frame_player = 0
 
         self.animation_timer_mob = 0
-        self.animation_timer_player= 0
+        self.animation_timer_player = 0
         
-        self.animation_speed_mob = 100
+        self.animation_speed_mob = 150  # Animation plus rapide pour le mouvement
         self.animation_speed_player = 110
         
-        self.afk_animation_speed_mob = 200
+        self.afk_animation_speed_mob = 300  # Animation plus lente pour idle
         self.afk_animation_speed_player = 300
         
         self.direction_player = 'right'
@@ -118,21 +118,18 @@ class AnimateSprite(pygame.sprite.Sprite):
 
     def animate_mob(self):
         now = pygame.time.get_ticks()
+        
         if self.sprite.is_moving:
             if now - self.animation_timer_mob > self.animation_speed_mob:
-                self.animation_timer_mob  = now
+                self.animation_timer_mob = now
                 if self.direction_mob == 'left':
                     self.image = self.frames_left_mob[self.current_frame_mob]
-                elif self.direction_mob == 'right':
+                else:
                     self.image = self.frames_right_mob[self.current_frame_mob]
-                
-                self.current_frame_mob += 1
-                if self.current_frame_mob >= len(self.frames_left_mob):
-                    self.current_frame_mob = 0
-                    
+                self.current_frame_mob = (self.current_frame_mob + 1) % len(self.frames_left_mob)
         else:
-            if now - self.animation_timer_mob  > self.afk_animation_speed_mob:
-                self.animation_timer_mob  = now
+            if now - self.animation_timer_mob > self.afk_animation_speed_mob:
+                self.animation_timer_mob = now
                 if self.direction_mob == 'left':
                     self.image = self.frames_afk_left_mob[self.current_frame_mob % len(self.frames_afk_left_mob)]
                 else:
@@ -150,11 +147,20 @@ class AnimateSprite(pygame.sprite.Sprite):
                 self.sprite.is_moving = False
 
     def check_movement_mob(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or keys[pygame.K_UP] or keys[pygame.K_DOWN]:
-            self.sprite.is_moving = True
-            self.afk_timer_mob = pygame.time.get_ticks()  
+        # Pour les mobs IA, on regarde la velocity pour savoir s'ils bougent
+        if hasattr(self.sprite, 'velocity'):
+            if self.sprite.velocity.length_squared() > 0:
+                self.sprite.is_moving = True
+                self.afk_timer_mob = pygame.time.get_ticks()
+            else:
+                if pygame.time.get_ticks() - self.afk_timer_mob > self.afk_delay_mob:
+                    self.sprite.is_moving = False
         else:
-            
-            if pygame.time.get_ticks() - self.afk_timer_mob > self.afk_delay_mob:
-                self.sprite.is_moving = False
+            # fallback clavier (jamais utilisé pour les mobs IA)
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or keys[pygame.K_UP] or keys[pygame.K_DOWN]:
+                self.sprite.is_moving = True
+                self.afk_timer_mob = pygame.time.get_ticks()
+            else:
+                if pygame.time.get_ticks() - self.afk_timer_mob > self.afk_delay_mob:
+                    self.sprite.is_moving = False

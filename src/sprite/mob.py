@@ -13,7 +13,7 @@ class Mob(animation.AnimateSprite):
         self.HORIZONTAL_ACCELERATION = 0.1
         self.HORIZONTAL_FRICTION = 0.1
 
-        self.speed_mob = 2
+        self.speed_mob = 1.2  # Mob plus lent que le joueur
         self.is_moving = False
 
         self.position = vector(x, y)
@@ -50,35 +50,40 @@ class Mob(animation.AnimateSprite):
         return image 
 
     def update(self):
-
-        self.velocity += self.acceleration
-        self.velocity.x *= (1 - self.HORIZONTAL_FRICTION)
-        self.velocity.y *= (1 - self.HORIZONTAL_FRICTION)
-
-
+        # Move mob by velocity set by AI (no acceleration/friction)
+        old_position = self.position.copy()
         future_position = self.position + self.velocity
 
+        # Set movement state based on if there's any velocity at all
+        self.is_moving = abs(self.velocity.x) > 0.01 or abs(self.velocity.y) > 0.01
+        
+        # Update direction based on movement
+        if self.velocity.x > 0:
+            self.direction_mob = 'right'
+        elif self.velocity.x < 0:
+            self.direction_mob = 'left'
 
         self.position.x = future_position.x
         self.rect.topleft = self.position
         self.feet.midbottom = self.rect.midbottom
+        collided_x = self.check_collision(axis='x')
 
-
-        self.check_collision(axis='x')
-    
         self.position.y = future_position.y
         self.rect.topleft = self.position
         self.feet.midbottom = self.rect.midbottom
+        collided_y = self.check_collision(axis='y')
 
-
-        self.check_collision(axis='y')
-
-        self.acceleration = vector(0, 0)
         self.rect.topleft = self.position
         self.feet.midbottom = self.rect.midbottom
         self.check_movement_mob()
         self.animate_mob()
-        
+
+        # Debug prints
+        print(f"[MOB DEBUG] is_moving: {self.is_moving}, speed_mob: {self.speed_mob}, velocity: {self.velocity}")
+        if collided_x or collided_y:
+            print(f"[MOB DEBUG] Collision at {self.position}, from {old_position}, velocity: {self.velocity}")
+        else:
+            print(f"[MOB DEBUG] Moved to {self.position}, velocity: {self.velocity}")
 
     def check_collision(self, axis):
         for obstacle in self.walls:
