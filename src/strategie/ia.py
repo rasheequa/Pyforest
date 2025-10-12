@@ -40,19 +40,19 @@ class IA:
         player_center = self.player.rect.center
         player_pos = (int(player_center[0] // self.pixel), int(player_center[1] // self.pixel))
 
-        print(f"[AI DEBUG] Mob id {id(self.mob)} grid: {mob_pos}, Player grid: {player_pos}, Mob pos: {self.mob.position}, Player rect.center: {player_center}")
+        # print(f"[AI DEBUG] Mob id {id(self.mob)} grid: {mob_pos}, Player grid: {player_pos}, Mob pos: {self.mob.position}, Player rect.center: {player_center}")
 
         player_vec = vector(player_center[0], player_center[1])
         distance_to_player = self.mob.position.distance_to(player_vec)
         can_see_player = True  # LOS désactivé temporairement
-        print(f"[AI DEBUG] Mob id {id(self.mob)} distance_to_player: {distance_to_player}, can_see_player: {can_see_player}")
+        # print(f"[AI DEBUG] Mob id {id(self.mob)} distance_to_player: {distance_to_player}, can_see_player: {can_see_player}")
         
         # More informative debug message about pathfinding decisions
-        if distance_to_player <= self.radius:
-            if distance_to_player <= self.pixel * 1.5:
-                print(f"[AI DEBUG] Mob id {id(self.mob)} trop proche du joueur ({distance_to_player:.2f} pixels), pas de recalcul de chemin")
-            else:
-                print(f"[AI DEBUG] Mob id {id(self.mob)} dans le rayon de poursuite, recalcul du chemin")
+        # if distance_to_player <= self.radius:
+        #     if distance_to_player <= self.pixel * 1.5:
+        #         print(f"[AI DEBUG] Mob id {id(self.mob)} trop proche du joueur ({distance_to_player:.2f} pixels), pas de recalcul de chemin")
+        #     else:
+        #         print(f"[AI DEBUG] Mob id {id(self.mob)} dans le rayon de poursuite, recalcul du chemin")
 
         # Don't recalculate path if too close to player (within 1.5 tiles)
         min_recalc_distance = self.pixel * 1.5
@@ -114,7 +114,7 @@ class IA:
             err = dx / 2.0
             while x != x1:
                 if (x, y) in self.astar.obstacle_positions:
-                    print(f"[LOS DEBUG] Blocked at {(x, y)}")
+                    # print(f"[LOS DEBUG] Blocked at {(x, y)}")
                     return False
                 err -= dy
                 if err < 0:
@@ -125,7 +125,7 @@ class IA:
             err = dy / 2.0
             while y != y1:
                 if (x, y) in self.astar.obstacle_positions:
-                    print(f"[LOS DEBUG] Blocked at {(x, y)}")
+                    # print(f"[LOS DEBUG] Blocked at {(x, y)}")
                     return False
                 err -= dx
                 if err < 0:
@@ -134,7 +134,7 @@ class IA:
                 y += sy
         # Check the final position
         if (x1, y1) in self.astar.obstacle_positions:
-            print(f"[LOS DEBUG] Blocked at {(x1, y1)} (final)")
+            # print(f"[LOS DEBUG] Blocked at {(x1, y1)} (final)")
             return False
         return True
 
@@ -145,7 +145,7 @@ class IA:
 
         # Pop all nodes that are obstacles or current mob grid
         while path and (path[0] in self.astar.obstacle_positions or path[0] == (int(self.mob.position.x // self.pixel), int(self.mob.position.y // self.pixel))):
-            print(f"[AI DEBUG] On pop le nœud bloqué ou déjà atteint: {path[0]}")
+            # print(f"[AI DEBUG] On pop le nœud bloqué ou déjà atteint: {path[0]}")
             path.pop(0)
         if not path:
             self.mob.velocity = vector(0, 0)
@@ -172,7 +172,7 @@ class IA:
 
         # Pop node if close enough or stuck for several frames
         if self.mob.position.distance_to(next_pixel_pos) < self.mob.speed_mob or self._stuck_counter > 10:
-            print(f"[AI DEBUG] On pop le nœud car trop proche ou bloqué: {next_pos}")
+            # print(f"[AI DEBUG] On pop le nœud car trop proche ou bloqué: {next_pos}")
             path.pop(0)
             self._stuck_counter = 0
 
