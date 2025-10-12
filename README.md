@@ -71,4 +71,4 @@ Possible improvements
 Credit
 -------
 
-This repository contains user-created assets
+This repository contains user-created assets.
