@@ -20,13 +20,13 @@ Project structure
   - `player.py` — Player entity and input handling
 - `src/strategie/` — AI and pathfinding
   - `ia.py` — A* implementation and pursuit logic
-- `src/modele/` — assets, tilemaps and spritesheets
+- `src/modele/` — assets, tilemaps and spritesheets (not mine)
 - Other supporting modules: `src/` packages, helpers, etc.
 
 Dependencies
 ------------
 
-The project uses (at least) the following Python packages:
+The project uses the following Python packages:
 
 - pygame
 - pytmx
@@ -54,21 +54,3 @@ Start the game with:
 python main.py
 ```
 
-Troubleshooting / development notes
-----------------------------------
-
-- If mobs jitter or flip animation quickly when close to the player, the A* algorithm can return paths that alternate. The IA class includes a small path recalculation cooldown and a "stop recalculating when very close" optimization to mitigate that.
-- Animation assets should be placed in `src/modele/...` as expected by `AnimateSprite`.
-- Debug prints are present across AI and mob update loops for development; you can silence them by removing or commenting the `print` statements.
-
-Possible improvements
----------------------
-
-- Add tie-breaking to A* to prefer continuing in the same direction (reduce oscillations).
-- Add config file for tuning AI radii and animation timings.
-- Pre-load animations and use a small LRU cache rather than loading/unloading on direction changes.
-
-Credit
--------
-
-This repository contains user-created assets.
