@@ -38,8 +38,8 @@ Install them with pip (prefer a virtualenv):
 pip install pygame pytmx pyscroll
 ```
 
-How it works (high level)
--------------------------
+How it works
+------------
 
 - The `IA` class in `src/strategie/ia.py` runs an A* search on a grid derived from the Tiled map. The A* implementation returns a list of grid positions (path).
 - Mobs use `move_along_path` to set their velocity toward the next node. The `Mob` class reads that `velocity` and the animation system displays the correct sprite frames for movement/idle.
